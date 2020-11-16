@@ -9,7 +9,10 @@ import java.util.Set;
 
 import static com.jpragma.utils.RandomUtils.randomAlphanumeric;
 
-public class ReportJobService {
+// BeanDefinitions created by factories to not call preDestroy method
+// See https://github.com/micronaut-projects/micronaut-core/issues/4489
+// Therefore we added support for AutoClosable as well, we will call close() method when the scope is over
+public class ReportJobService implements AutoCloseable {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     private final String id = randomAlphanumeric(7);
@@ -30,6 +33,11 @@ public class ReportJobService {
 
     public void cleanup() {
         log.warn("Cleaning up ReportJobService {}", id);
-        values.forEach(v -> globalRegistry.removeFromData(v));
+        values.forEach(globalRegistry::removeFromData);
+    }
+
+    @Override
+    public void close() {
+        cleanup();
     }
 }

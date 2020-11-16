@@ -117,6 +117,13 @@ public class UnitOfWorkCustomScope implements CustomScope<UnitOfWorkScope>, Life
                         LOG.error("Error disposing UnitOfWork scoped bean: {}", bean, e);
                     }
                 }
+                if (bean instanceof AutoCloseable) {
+                    try {
+                        ((AutoCloseable) bean).close();
+                    } catch (Exception e) {
+                        LOG.error("Error closing UnitOfWork scoped bean: {}", bean, e);
+                    }
+                }
             });
         }
         return Optional.ofNullable(bean);

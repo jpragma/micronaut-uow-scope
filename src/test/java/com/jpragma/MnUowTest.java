@@ -54,7 +54,7 @@ public class MnUowTest {
         assertEquals(calcResult, calcJobBean.calculate("foo"));
 
         unitOfWorkManager.stop(calculationTask);
-        unitOfWorkManager.stop(reportTask); // TODO Currently bean definitions created by factories are not implementing DisposableBeanDefinition for some reason
+        unitOfWorkManager.stop(reportTask);
 
         assertTrue(globalRegistry.isEmpty());
         assertThrows(IllegalStateException.class, () -> calcJobBean.calculate("foo"));
